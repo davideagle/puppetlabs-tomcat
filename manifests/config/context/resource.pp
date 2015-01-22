@@ -22,11 +22,10 @@ define tomcat::config::context::resource (
   $driverClassName,
   $username,
   $password,
-  $maxActive,
+  $maxTotal,
   $maxIdle,
-  $maxWait,
+  $maxWaitMillis,
   $url,
-  $factory,
   $catalina_base   = $::tomcat::catalina_home,
   $resource_ensure = 'present',
 ) {
@@ -48,16 +47,15 @@ define tomcat::config::context::resource (
       "set ${base_path}/#attribute/driverClassName ${driverClassName}"
     $_username        = "set ${base_path}/#attribute/username ${username}"
     $_password        = "set ${base_path}/#attribute/password ${password}"
-    $_maxActive       = "set ${base_path}/#attribute/maxActive ${maxActive}"
+    $_maxTotal        = "set ${base_path}/#attribute/maxActive ${maxTotal}"
     $_maxIdle         = "set ${base_path}/#attribute/maxIdle ${maxIdle}"
-    $_maxWait         = "set ${base_path}/#attribute/maxWait ${maxWait}"
+    $_maxWaitMillis   = "set ${base_path}/#attribute/maxWait ${maxWaitMillis}"
     $_url             = "set ${base_path}/#attribute/url ${url}"
-    $_factory         = "set ${base_path}/#attribute/factory ${factory}"
 
     $changes = delete_undef_values([$_resource_name, $_auth, $_type,
                                     $_driverClassName, $_username, $_password,
-                                    $_maxActive, $_maxIdle, $_maxWait, $_url,
-                                    $_factory ])
+                                    $_maxTotal, $_maxIdle, $_maxWaitMillis,
+                                    $_url ])
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
