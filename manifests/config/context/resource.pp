@@ -28,6 +28,7 @@ define tomcat::config::context::resource (
   $url,
   $catalina_base   = $::tomcat::catalina_home,
   $resource_ensure = 'present',
+  $additional_attributes = {}
 ) {
   if versioncmp($::augeasversion, '1.0.0') < 0 {
     fail('Server configurations require Augeas >= 1.0.0')
@@ -52,10 +53,16 @@ define tomcat::config::context::resource (
     $_maxWaitMillis   = "set ${base_path}/#attribute/maxWait ${maxWaitMillis}"
     $_url             = "set ${base_path}/#attribute/url ${url}"
 
+    if ! empty($additional_attributes) {
+      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_name}']/#attribute/"), "'")
+    } else {
+      $_additional_attributes = undef
+    }
+
     $changes = delete_undef_values([$_resource_name, $_auth, $_type,
                                     $_driverClassName, $_username, $_password,
                                     $_maxTotal, $_maxIdle, $_maxWaitMillis,
-                                    $_url ])
+                                    $_url, $_additional_attributes ])
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
