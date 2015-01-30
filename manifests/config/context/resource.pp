@@ -1,18 +1,18 @@
-# Definition: tomcat::config::server::connector
+# Definition: tomcat::config::context::resource
 #
-# Configure Connector elements in $CATALINA_BASE/conf/server.xml
+# Configure Resource elements in $CATALINA_BASE/conf/context.xml
 #
 # Parameters:
 # - $catalina_base is the base directory for the Tomcat installation.
-# - $connector_ensure specifies whether you are trying to add or remove the
-#   Connector element. Valid values are 'true', 'false', 'present', and
+# - $resource_ensure specifies whether you are trying to add or remove the
+#   Resource element. Valid values are 'true', 'false', 'present', and
 #   'absent'. Defaults to 'present'.
-# - The $port attribute. This attribute is required unless $connector_ensure
-#   is set to false.
-# - The $protocol attribute. Defaults to $name when not specified.
-# - $parent_service is the Service element this Connector should be nested
-#   beneath. Defaults to 'Catalina'.
-# - An optional hash of $additional_attributes to add to the Connector. Should
+# - $resource_name is the name of the Resource to be created, relative to 
+#   the java:comp/env context.
+# - $auth authentication type for the Resource
+# - $type is the fully qualified Java class name expected by the web application 
+#   when it performs a lookup for this resource
+# - An optional hash of $additional_attributes to add to the Resource. Should
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resource (
@@ -28,7 +28,8 @@ define tomcat::config::context::resource (
   $url                   = undef,
   $catalina_base         = $::tomcat::catalina_home,
   $resource_ensure       = 'present',
-  $additional_attributes = {}
+  $additional_attributes = {},
+  $attributes_to_remove  = [],
 ) {
   if versioncmp($::augeasversion, '1.0.0') < 0 {
     fail('Server configurations require Augeas >= 1.0.0')
@@ -58,11 +59,17 @@ define tomcat::config::context::resource (
     } else {
       $_additional_attributes = undef
     }
+    
+    if ! empty(any2array($attributes_to_remove)) {
+      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}[#attribute/name='${resource_name}']/#attribute/")
+    } else {
+      $_attributes_to_remove = undef
+    }
 
     $changes = delete_undef_values([$_resource_name, $_auth, $_type,
                                     $_driverClassName, $_username, $_password,
                                     $_maxTotal, $_maxIdle, $_maxWaitMillis,
-                                    $_url, $_additional_attributes ])
+                                    $_url, $_additional_attributes, $_attributes_to_remove])
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
