@@ -24,6 +24,9 @@
         - [tomcat::config::server::realm](#tomcatconfigserverrealm)
         - [tomcat::config::server::service](#tomcatconfigserverservice)
         - [tomcat::config::server::valve](#tomcatconfigservervalve)
+        - [tomcat::config::context](#tomcatconfigcontext)
+        - [tomcat::config::context::resource](#tomcatconfigcontextresource)
+        - [tomcat::config::context::resourcelink](#tomcatconfigcontextresourcelink)
         - [tomcat::instance](#tomcatinstance)
         - [tomcat::service](#tomcatservice)
         - [tomcat::setenv::entry](#tomcatsetenventry)
@@ -204,6 +207,9 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
 * `tomcat::config::server::realm`: Configures [Realm](http://tomcat.apache.org/tomcat-8.0-doc/config/realm.html) elements in $CATALINA_BASE/conf/server.xml.
 * `tomcat::config::server::service`: Configures a [Service](http://tomcat.apache.org/tomcat-8.0-doc/config/service.html) element nested in the Server element in $CATALINA_BASE/conf/server.xml.
 * `tomcat::config::server::valve`: Configures a [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html) element in $CATALINA_BASE/conf/server.xml.
+* `tomcat::config::context`: Configures a [Context](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html) element in $CATALINA_BASE/conf/context.xml.
+* `tomcat::config::context::resource`: Configures a [Resource](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Definitions) element in $CATALINA_BASE/conf/context.xml.
+* `tomcat::config::context::resourcelink`: Configures a [ResourceLink](http://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Resource_Links) element in $CATALINA_BASE/conf/context.xml.
 * `tomcat::instance`: Installs a Tomcat instance.
 * `tomcat::service`: Provides Tomcat service management.
 * `tomcat::setenv::entry`: Adds an entry to the configuration file (ie. setenv.sh, /etc/sysconfig/tomcat, ...).
@@ -547,6 +553,64 @@ Specifies is the Service element this Valve should be nested beneath. Defaults t
 #####`$valve_ensure`
 
 Specifies whether to add or remove the component that will be inserted into the request processing pipeline for the associated Catalina container. Maps to the  [Valve](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Introduction) XML element. Valid values are 'true', 'false', 'present', or 'absent'. Defaults to 'present'.
+
+#####`$additional_attributes`
+
+Specifies any additional attributes to add to the Valve. Should be a hash of the format 'attribute' => 'value'. This parameter is optional.
+
+#####`$attributes_to_remove`
+
+Specifies any attributes to remove from the Valve. Should be a hash of the format 'attribute' => 'value'. This parameter is optional.
+
+####tomcat::config::context
+
+#####`$catalina_base`
+
+Specifies the root of the Tomcat installation.
+
+####tomcat::config::context::resource
+
+#####`$catalina_base`
+
+Specifies the root of the Tomcat installation.
+
+#####`$resource_name`
+
+is the name of the Resource to be created, relative to the java:comp/env context.
+
+#####`$type`
+
+The fully qualified Java class name expected by the web application when it performs a lookup for this resource.
+
+#####`$resource_ensure`
+
+specifies whether you are trying to add or remove the Resource element. Valid values are 'true', 'false', 'present', and 'absent'. Defaults to 'present'
+
+#####`$additional_attributes`
+
+Specifies any additional attributes to add to the Valve. Should be a hash of the format 'attribute' => 'value'. This parameter is optional.
+
+#####`$attributes_to_remove`
+
+Specifies any attributes to remove from the Valve. Should be a hash of the format 'attribute' => 'value'. This parameter is optional.
+
+####tomcat::config::context::resourcelink
+
+#####`$catalina_base`
+
+Specifies the root of the Tomcat installation.
+
+#####`$global`
+
+The name of the linked global resource in the global JNDI context.
+
+#####`$type`
+
+The fully qualified Java class name expected by the web application when it performs a lookup for this resource link.
+
+#####`$resource_ensure`
+
+specifies whether you are trying to add or remove the ResourceLink element. Valid values are 'true', 'false', 'present', and 'absent'. Defaults to 'present'
 
 #####`$additional_attributes`
 
