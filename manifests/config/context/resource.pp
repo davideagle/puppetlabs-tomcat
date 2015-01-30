@@ -16,18 +16,18 @@
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resource (
-  $resource_name,
-  $auth,
-  $type,
-  $driverClassName,
-  $username,
-  $password,
-  $maxTotal,
-  $maxIdle,
-  $maxWaitMillis,
-  $url,
-  $catalina_base   = $::tomcat::catalina_home,
-  $resource_ensure = 'present',
+  $resource_name         = $name,
+  $auth                  = undef,
+  $type                  = undef,
+  $driverClassName       = undef,
+  $username              = undef,
+  $password              = undef,
+  $maxTotal              = undef,
+  $maxIdle               = undef,
+  $maxWaitMillis         = undef,
+  $url                   = undef,
+  $catalina_base         = $::tomcat::catalina_home,
+  $resource_ensure       = 'present',
   $additional_attributes = {}
 ) {
   if versioncmp($::augeasversion, '1.0.0') < 0 {
