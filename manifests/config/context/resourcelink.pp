@@ -1,17 +1,17 @@
-# Definition: tomcat::config::server::connector
+# Definition: tomcat::config::server::resourcelink
 #
-# Configure Connector elements in $CATALINA_BASE/conf/server.xml
+# Configure ResourceLink elements in $CATALINA_BASE/conf/context.xml
 #
 # Parameters:
 # - $catalina_base is the base directory for the Tomcat installation.
-# - $connector_ensure specifies whether you are trying to add or remove the
-#   Connector element. Valid values are 'true', 'false', 'present', and
+# - $resource_ensure specifies whether you are trying to add or remove the
+#   ResourceLink element. Valid values are 'true', 'false', 'present', and
 #   'absent'. Defaults to 'present'.
-# - The $port attribute. This attribute is required unless $connector_ensure
-#   is set to false.
-# - The $protocol attribute. Defaults to $name when not specified.
-# - $parent_service is the Service element this Connector should be nested
-#   beneath. Defaults to 'Catalina'.
+# - $global The name of the linked global resource in the global JNDI context.
+# - $type The fully qualified Java class name expected by the web application 
+#   when it performs a lookup for this resource link.
+# - $resource_link_name The name of the resource link to be created, relative 
+#   to the java:comp/env context.
 # - An optional hash of $additional_attributes to add to the Connector. Should
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
