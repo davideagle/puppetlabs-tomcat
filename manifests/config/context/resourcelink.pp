@@ -16,11 +16,13 @@
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resourcelink (
-  $global,
-  $resource_link_name,
-  $type,
-  $catalina_base   = $::tomcat::catalina_home,
-  $resource_ensure = 'present',
+  $resource_link_name    = $name,
+  $global                = undef,
+  $type                  = undef,
+  $catalina_base         = $::tomcat::catalina_home,
+  $resource_ensure       = 'present',
+  $additional_attributes = {},
+  $attributes_to_remove  = [],
 ) {
   if versioncmp($::augeasversion, '1.0.0') < 0 {
     fail('Server configurations require Augeas >= 1.0.0')
@@ -37,7 +39,20 @@ define tomcat::config::context::resourcelink (
     $_global             = "set ${base_path}/#attribute/global ${global}"
     $_type               = "set ${base_path}/#attribute/type   ${type}"
 
-    $changes = delete_undef_values([$_resource_link_name, $_type, $_global ])
+    if ! empty($additional_attributes) {
+      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_link_name}']/#attribute/"), "'")
+    } else {
+      $_additional_attributes = undef
+    }
+    
+    if ! empty(any2array($attributes_to_remove)) {
+      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}[#attribute/name='${resource_link_name}']/#attribute/")
+    } else {
+      $_attributes_to_remove = undef
+    }
+
+    $changes = delete_undef_values([$_resource_link_name, $_type, $_global,
+                                    $_additional_attributes, $_attributes_to_remove])
   }
 
   augeas { "context-${catalina_base}-resourcelink-${name}":
