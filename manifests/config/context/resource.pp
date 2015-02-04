@@ -12,6 +12,15 @@
 # - $auth authentication type for the Resource
 # - $type is the fully qualified Java class name expected by the web application 
 #   when it performs a lookup for this resource
+# - $closeMethod Name of the zero-argument method to call on a singleton 
+#   resource when it is no longer required.
+# - $description Optional, human-readable description of this resource.
+# - $scope Specify whether connections obtained through this resource 
+#   manager can be shared. [Shareable|Unshareable]
+# - $singleton Specify whether this resource definition is for a singleton 
+#   resource [true|false]
+#   $type The fully qualified Java class name expected by the web application 
+#   when it performs a lookup for this resource.
 # - An optional hash of $additional_attributes to add to the Resource. Should
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.

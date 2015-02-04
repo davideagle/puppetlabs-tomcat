@@ -17,16 +17,13 @@ describe 'tomcat::config::context::resource', :type => :define do
     let :params do
       {
         :catalina_base         => '/opt/apache-tomcat/test',
-        :resource_name         => 'jdbc',
         :auth                  => 'Container',
         :closeMethod           => 'closeMethod',
         :description           => 'description',
         :scope                 => 'Shareable',
         :singleton             => 'true',
         :type                  => 'net.sourceforge.jtds.jdbcx.JtdsDataSource',
-        :additional_attributes => {'key' => 'value'}
-        #  'key' => 'value',
-        #}
+        :additional_attributes => {'validationQuery' => 'getdate()'},
 
       }
     end
@@ -42,7 +39,7 @@ describe 'tomcat::config::context::resource', :type => :define do
         'set Context/Resource/#attribute/scope Shareable',
         'set Context/Resource/#attribute/singleton true',
         'set Context/Resource/#attribute/type net.sourceforge.jtds.jdbcx.JtdsDataSource',
-        'set Context/Resource/#attribute/key value',
+        'set Context/Resource/#attribute/validationQuery getdate()',
         ]
       )
     }
