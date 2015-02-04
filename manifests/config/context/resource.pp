@@ -92,7 +92,7 @@ define tomcat::config::context::resource (
 
                                     
     $changes = delete_undef_values([$resource, $_auth, $_closeMethod,
-                                    $_description, $_scope, $_singleton, $_type])
+                                    $_description, $_scope, $_singleton, $_type, $_additional_attributes])
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
