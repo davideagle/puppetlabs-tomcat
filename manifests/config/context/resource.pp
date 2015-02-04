@@ -18,14 +18,11 @@
 define tomcat::config::context::resource (
   $resource_name         = $name,
   $auth                  = undef,
+  $closeMethod           = undef,
+  $description           = undef,
+  $scope                 = undef,
+  $singleton             = undef,
   $type                  = undef,
-  $driverClassName       = undef,
-  $username              = undef,
-  $password              = undef,
-  $maxTotal              = undef,
-  $maxIdle               = undef,
-  $maxWaitMillis         = undef,
-  $url                   = undef,
   $catalina_base         = $::tomcat::catalina_home,
   $resource_ensure       = 'present',
   $additional_attributes = {},
@@ -42,17 +39,44 @@ define tomcat::config::context::resource (
   if $resource_ensure =~ /^(absent|false)$/ {
     $changes = "rm ${base_path}"
   } else {
-    $_resource_name   = "set ${base_path}/#attribute/name ${resource_name}"
-    $_auth            = "set ${base_path}/#attribute/auth ${auth}"
-    $_type            = "set ${base_path}/#attribute/type ${type}"
-    $_driverClassName =
-      "set ${base_path}/#attribute/driverClassName ${driverClassName}"
-    $_username        = "set ${base_path}/#attribute/username ${username}"
-    $_password        = "set ${base_path}/#attribute/password ${password}"
-    $_maxTotal        = "set ${base_path}/#attribute/maxActive ${maxTotal}"
-    $_maxIdle         = "set ${base_path}/#attribute/maxIdle ${maxIdle}"
-    $_maxWaitMillis   = "set ${base_path}/#attribute/maxWait ${maxWaitMillis}"
-    $_url             = "set ${base_path}/#attribute/url ${url}"
+    $resource   = "set ${base_path}/#attribute/name ${resource_name}"
+    
+    if $auth {
+      $_auth = "set ${base_path}/#attribute/auth ${auth}"
+    } else {
+      $_auth = undef
+    }
+    
+    if $closeMethod {
+      $_closeMethod = "set ${base_path}/#attribute/closeMethod ${closeMethod}"
+    } else {
+      $_closeMethod = undef
+    }
+    
+    if $description {
+      $_description = "set ${base_path}/#attribute/description ${description}"
+    } else {
+      $_description = undef
+    }
+    
+    if $scope {
+      $_scope = "set ${base_path}/#attribute/scope ${scope}"
+    } else {
+      $_scope = undef
+    }
+    
+    if $singleton {
+      $_singleton = "set ${base_path}/#attribute/singleton ${singleton}"
+    } else {
+      $_singleton = undef
+    }
+    
+    if $type {
+      $_type = "set ${base_path}/#attribute/type ${type}"
+    } else {
+      $_type = undef
+    }
+
 
     if ! empty($additional_attributes) {
       $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_name}']/#attribute/"), "'")
@@ -66,10 +90,9 @@ define tomcat::config::context::resource (
       $_attributes_to_remove = undef
     }
 
-    $changes = delete_undef_values([$_resource_name, $_auth, $_type,
-                                    $_driverClassName, $_username, $_password,
-                                    $_maxTotal, $_maxIdle, $_maxWaitMillis,
-                                    $_url, $_additional_attributes, $_attributes_to_remove])
+                                    
+    $changes = delete_undef_values([$resource, $_auth, $_closeMethod,
+                                    $_description, $_scope, $_singleton, $_type])
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
