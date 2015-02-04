@@ -8,7 +8,7 @@
 
 
 define tomcat::config::context (
-  $catalina_base           = $::tomcat::catalina_home,
+  $catalina_base = $::tomcat::catalina_home,
 ) {
 
   if versioncmp($::augeasversion, '1.0.0') < 0 {
