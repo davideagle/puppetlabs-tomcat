@@ -578,6 +578,22 @@ Specifies the root of the Tomcat installation.
 
 is the name of the Resource to be created, relative to the java:comp/env context.
 
+#####`$auth`
+
+authentication type for the Resource.
+
+#####`$closeMethod`
+
+Name of the zero-argument method to call on a singleton resource when it is no longer required.
+
+#####`$description`
+
+Optional, human-readable description of this resource.
+
+#####`$singleton`
+
+Specify whether this resource definition is for a singleton resource [true|false].
+
 #####`$type`
 
 The fully qualified Java class name expected by the web application when it performs a lookup for this resource.
