@@ -8,7 +8,7 @@
 #   ResourceLink element. Valid values are 'true', 'false', 'present', and
 #   'absent'. Defaults to 'present'.
 # - $global The name of the linked global resource in the global JNDI context.
-# - $type The fully qualified Java class name expected by the web application 
+# - $resource_type The fully qualified Java class name expected by the web application 
 #   when it performs a lookup for this resource link.
 # - $resource_link_name The name of the resource link to be created, relative 
 #   to the java:comp/env context.
