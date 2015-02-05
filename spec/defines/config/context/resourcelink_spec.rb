@@ -27,7 +27,7 @@ describe 'tomcat::config::context::resourcelink', :type => :define do
       'changes' => [
         'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/name linkToGlobalResource',
         'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/global simpleValue',
-        'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/type java',
+        'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/types java',
         ]
       )
     }
