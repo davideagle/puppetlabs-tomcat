@@ -46,7 +46,7 @@ define tomcat::config::context::resourcelink (
       fail('$global must be specified ResourceLink')
     }
     
-    $_resource_link = "set ${base_path}/#attribute/name ${resource_link_name}"
+    $_resource_link = "set ${base_path}/#attribute/name ${_resource_link_name}"
     
     if $global {
       $_global = "set ${base_path}/#attribute/global ${global}"
