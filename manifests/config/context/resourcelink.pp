@@ -16,9 +16,9 @@
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resourcelink (
-  $resource_link_name    = $name,
+  $resource_link_name    = undef,
   $global                = undef,
-  $type                  = undef,
+  $resource_type         = undef,
   $catalina_base         = $::tomcat::catalina_home,
   $resource_ensure       = 'present',
   $additional_attributes = {},
@@ -29,15 +29,36 @@ define tomcat::config::context::resourcelink (
   }
 
   validate_re($resource_ensure, '^(present|absent|true|false)$')
+  
+  if $resource_link_name {
+    $_resource_link_name = $resource_link_name
+  } else {
+    $_resource_link_name = $name
+  }
 
-  $base_path = 'Context/ResourceLink'
+  $base_path = "Context/ResourceLink[#attribute='$_resource_link_name']"
 
   if $resource_ensure =~ /^(absent|false)$/ {
     $changes = "rm ${base_path}"
   } else {
-    $_resource_link_name = "set ${base_path}/#attribute/name   ${resource_link_name}"
-    $_global             = "set ${base_path}/#attribute/global ${global}"
-    $_type               = "set ${base_path}/#attribute/type   ${type}"
+    
+    if ! $global {
+      fail('$global must be specified ResourceLink')
+    }
+    
+    $_resource_link = "set ${base_path}/#attribute/name ${resource_link_name}"
+    
+    if $global {
+      $_global = "set ${base_path}/#attribute/global ${global}"
+    } else {
+      $_global = undef
+    }
+    
+    if $resource_type {
+      $_resource_type = "set ${base_path}/#attribute/type ${resource_type}"
+    } else {
+      $_resource_type = undef
+    }
 
     if ! empty($additional_attributes) {
       $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_link_name}']/#attribute/"), "'")
@@ -51,7 +72,7 @@ define tomcat::config::context::resourcelink (
       $_attributes_to_remove = undef
     }
 
-    $changes = delete_undef_values([$_resource_link_name, $_type, $_global,
+    $changes = delete_undef_values([$_resource_link, $_resource_type, $_global,
                                     $_additional_attributes, $_attributes_to_remove])
   }
 

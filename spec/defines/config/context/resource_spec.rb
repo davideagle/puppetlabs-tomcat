@@ -23,7 +23,7 @@ describe 'tomcat::config::context::resource', :type => :define do
         :scope                 => 'Shareable',
         :singleton             => 'true',
         :type                  => 'net.sourceforge.jtds.jdbcx.JtdsDataSource',
-        :additional_attributes => {'validationQuery' => 'getdate()'},
+        #:additional_attributes => {'validationQuery' => 'getdate()'},
 
       }
     end
@@ -39,7 +39,23 @@ describe 'tomcat::config::context::resource', :type => :define do
         'set Context/Resource/#attribute/scope Shareable',
         'set Context/Resource/#attribute/singleton true',
         'set Context/Resource/#attribute/type net.sourceforge.jtds.jdbcx.JtdsDataSource',
-        'set Context/Resource/#attribute/validationQuery getdate()',
+        #'set Context/Resource/#attribute/validationQuery getdate()',
+        ]
+      )
+    }
+  end
+  context 'Remove Resource' do
+    let :params do
+      {
+        :catalina_base   => '/opt/apache-tomcat/test',
+        :resource_ensure => 'absent',
+      }
+    end
+    it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test-resource-jdbc').with(
+      'lens' => 'Xml.lns',
+      'incl' => '/opt/apache-tomcat/test/conf/context.xml',
+      'changes' => [
+        'rm Context/Resource',
         ]
       )
     }
