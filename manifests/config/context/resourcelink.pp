@@ -55,7 +55,7 @@ define tomcat::config::context::resourcelink (
     }
     
     if $resource_type {
-      $_resource_type = "set ${base_path}/#attribute/types ${resource_type}"
+      $_resource_type = "set ${base_path}/#attribute/type ${resource_type}"
     } else {
       $_resource_type = undef
     }
