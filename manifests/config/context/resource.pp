@@ -55,7 +55,7 @@ define tomcat::config::context::resource (
     $changes = "rm ${base_path}"
   } else {
     
-    $resource   = "set ${base_path}/#attribute/name ${_resource_name}"
+    $_resource   = "set ${base_path}/#attribute/name ${_resource_name}"
     
     if $auth {
       $_auth = "set ${base_path}/#attribute/auth ${auth}"
