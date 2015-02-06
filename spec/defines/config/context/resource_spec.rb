@@ -17,12 +17,12 @@ describe 'tomcat::config::context::resource', :type => :define do
     let :params do
       {
         :catalina_base         => '/opt/apache-tomcat/test',
-        :auth                  => 'Container',
-        :closeMethod           => 'closeMethod',
-        :description           => 'description',
-        :scope                 => 'Shareable',
-        :singleton             => 'true',
-        :type                  => 'net.sourceforge.jtds.jdbcx.JtdsDataSource',
+        #:auth                  => 'Container',
+        #:closeMethod           => 'closeMethod',
+        #:description           => 'description',
+        #:scope                 => 'Shareable',
+        #:singleton             => 'true',
+        #:type                  => 'net.sourceforge.jtds.jdbcx.JtdsDataSource',
         #:additional_attributes => {'validationQuery' => 'getdate()'},
 
       }
@@ -31,15 +31,15 @@ describe 'tomcat::config::context::resource', :type => :define do
       'lens' => 'Xml.lns',
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
-        'set Context/Resource/#attribute/name jdbc',
+        'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/name jdbc',
         
-        'set Context/Resource/#attribute/auth Container',
-        'set Context/Resource/#attribute/closeMethod closeMethod',
-        'set Context/Resource/#attribute/description description',
-        'set Context/Resource/#attribute/scope Shareable',
-        'set Context/Resource/#attribute/singleton true',
-        'set Context/Resource/#attribute/type net.sourceforge.jtds.jdbcx.JtdsDataSource',
-        #'set Context/Resource/#attribute/validationQuery getdate()',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/auth Container',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/closeMethod closeMethod',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/description description',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/scope Shareable',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/singleton true',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/type net.sourceforge.jtds.jdbcx.JtdsDataSource',
+        #'set Context/Resource[#attribute/name=\'jdbc\']/#attribute/validationQuery getdate()',
         ]
       )
     }
@@ -55,7 +55,7 @@ describe 'tomcat::config::context::resource', :type => :define do
       'lens' => 'Xml.lns',
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
-        'rm Context/Resource',
+        'rm set Context/Resource[#attribute/name=\'jdbc\']',
         ]
       )
     }

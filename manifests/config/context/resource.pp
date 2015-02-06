@@ -25,7 +25,7 @@
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resource (
-  $resource_name         = $name,
+  $resource_name         = undef,
   $auth                  = undef,
   $closeMethod           = undef,
   $description           = undef,
@@ -42,13 +42,20 @@ define tomcat::config::context::resource (
   }
 
   validate_re($resource_ensure, '^(present|absent|true|false)$')
+  
+  if $resource_name {
+    $_resource_name = $resource_name
+  } else {
+    $_resource_name = $name
+  }
 
-  $base_path = 'Context/Resource'
+  $base_path = "Context/Resource[#attribute/name='${_resource_name}']"
 
   if $resource_ensure =~ /^(absent|false)$/ {
     $changes = "rm ${base_path}"
   } else {
-    $resource   = "set ${base_path}/#attribute/name ${resource_name}"
+    
+    $resource   = "set ${base_path}/#attribute/name ${_resource_name}"
     
     if $auth {
       $_auth = "set ${base_path}/#attribute/auth ${auth}"
@@ -100,7 +107,7 @@ define tomcat::config::context::resource (
     }
 
                                     
-    $changes = delete_undef_values([$resource, $_auth, $_closeMethod,
+    $changes = delete_undef_values([$_resource, $_auth, $_closeMethod,
                                     $_description, $_scope, $_singleton, $_type, $_additional_attributes])
   }
 
