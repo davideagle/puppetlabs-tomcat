@@ -42,10 +42,6 @@ define tomcat::config::context::resourcelink (
     $changes = "rm ${base_path}"
   } else {
     
-    #if ! $global {
-    #  fail('$global must be specified ResourceLink')
-    #}
-    
     $_resource_link = "set ${base_path}/#attribute/name ${_resource_link_name}"
     
     if $global {
@@ -72,8 +68,9 @@ define tomcat::config::context::resourcelink (
       $_attributes_to_remove = undef
     }
 
-    $changes = delete_undef_values(flatten([$_resource_link, $_resource_type, $_global,
-                                    $_additional_attributes, $_attributes_to_remove]))
+    $changes = delete_undef_values(flatten([$_resource_link, $_resource_type, 
+                                            $_global, $_additional_attributes, 
+                                            $_attributes_to_remove]))
   }
 
   augeas { "context-${catalina_base}-resourcelink-${name}":
