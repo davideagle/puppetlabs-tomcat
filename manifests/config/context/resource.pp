@@ -108,8 +108,8 @@ define tomcat::config::context::resource (
 
                                     
     $changes = delete_undef_values(flatten([$_resource, $_auth, $_closeMethod,
-                                            $_description, $_scope, $_singleton, 
-                                            $_type, $_additional_attributes, 
+                                            $_description, $_scope, $_singleton,
+                                            $_type, $_additional_attributes,
                                             $_attributes_to_remove]))
   }
 

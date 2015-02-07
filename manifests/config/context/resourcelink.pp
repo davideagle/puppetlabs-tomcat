@@ -68,8 +68,8 @@ define tomcat::config::context::resourcelink (
       $_attributes_to_remove = undef
     }
 
-    $changes = delete_undef_values(flatten([$_resource_link, $_resource_type, 
-                                            $_global, $_additional_attributes, 
+    $changes = delete_undef_values(flatten([$_resource_link, $_resource_type,
+                                            $_global, $_additional_attributes,
                                             $_attributes_to_remove]))
   }
 
