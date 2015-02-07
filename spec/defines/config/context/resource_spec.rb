@@ -55,7 +55,7 @@ describe 'tomcat::config::context::resource', :type => :define do
       'lens' => 'Xml.lns',
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
-        'rm set Context/Resource[#attribute/name=\'jdbc\']',
+        'rm Context/Resource[#attribute/name=\'jdbc\']',
         ]
       )
     }

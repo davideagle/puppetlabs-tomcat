@@ -19,6 +19,12 @@ describe 'tomcat::config::context::resourcelink', :type => :define do
         :catalina_base         => '/opt/apache-tomcat/test',
         :global                => 'simpleValue',
         :resource_type         => 'java',
+        :additional_attributes => {
+          'factory'            => 'javax.naming.spi.ObjectFactory',
+        },
+        :attributes_to_remove  => [
+          'foobar',
+        ],
       }
     end
     it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test-resourcelink-linkToGlobalResource').with(
@@ -26,8 +32,26 @@ describe 'tomcat::config::context::resourcelink', :type => :define do
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
         'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/name linkToGlobalResource',
-        'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/global simpleValue',
         'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/type java',
+        'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/global simpleValue',
+        'set Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/factory \'javax.naming.spi.ObjectFactory\'',
+        'rm Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']/#attribute/foobar',
+        ]
+      )
+    }
+  end
+  context 'Remove ResourceLink' do
+    let :params do
+      {
+        :catalina_base   => '/opt/apache-tomcat/test',
+        :resource_ensure => 'absent',
+      }
+    end
+    it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test-resourcelink-linkToGlobalResource').with(
+      'lens' => 'Xml.lns',
+      'incl' => '/opt/apache-tomcat/test/conf/context.xml',
+      'changes' => [
+        'rm Context/ResourceLink[#attribute/name=\'linkToGlobalResource\']',
         ]
       )
     }

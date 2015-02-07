@@ -61,19 +61,19 @@ define tomcat::config::context::resourcelink (
     }
 
     if ! empty($additional_attributes) {
-      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_link_name}']/#attribute/"), "'")
+      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}/#attribute/"), "'")
     } else {
       $_additional_attributes = undef
     }
     
     if ! empty(any2array($attributes_to_remove)) {
-      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}[#attribute/name='${resource_link_name}']/#attribute/")
+      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}/#attribute/")
     } else {
       $_attributes_to_remove = undef
     }
 
-    $changes = delete_undef_values([$_resource_link, $_resource_type, $_global,
-                                    $_additional_attributes, $_attributes_to_remove])
+    $changes = delete_undef_values(flatten([$_resource_link, $_resource_type, $_global,
+                                    $_additional_attributes, $_attributes_to_remove]))
   }
 
   augeas { "context-${catalina_base}-resourcelink-${name}":
