@@ -95,20 +95,22 @@ define tomcat::config::context::resource (
 
 
     if ! empty($additional_attributes) {
-      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}[#attribute/name='${resource_name}']/#attribute/"), "'")
+      $_additional_attributes = suffix(prefix(join_keys_to_values($additional_attributes, " '"), "set ${base_path}/#attribute/"), "'")
     } else {
       $_additional_attributes = undef
     }
     
     if ! empty(any2array($attributes_to_remove)) {
-      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}[#attribute/name='${resource_name}']/#attribute/")
+      $_attributes_to_remove = prefix(any2array($attributes_to_remove), "rm ${base_path}/#attribute/")
     } else {
       $_attributes_to_remove = undef
     }
 
                                     
-    $changes = delete_undef_values([$_resource, $_auth, $_closeMethod,
-                                    $_description, $_scope, $_singleton, $_type, $_additional_attributes])
+    $changes = delete_undef_values(flatten([$_resource, $_auth, $_closeMethod,
+                                            $_description, $_scope, $_singleton, 
+                                            $_type, $_additional_attributes, 
+                                            $_attributes_to_remove]))
   }
 
   augeas { "context-${catalina_base}-resource-${name}":
