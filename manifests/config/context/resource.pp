@@ -12,7 +12,7 @@
 # - $auth authentication type for the Resource
 # - $type is the fully qualified Java class name expected by the web application 
 #   when it performs a lookup for this resource
-# - $closeMethod Name of the zero-argument method to call on a singleton 
+# - $close_method Name of the zero-argument method to call on a singleton 
 #   resource when it is no longer required.
 # - $description Optional, human-readable description of this resource.
 # - $scope Specify whether connections obtained through this resource 
@@ -27,7 +27,7 @@
 define tomcat::config::context::resource (
   $resource_name         = undef,
   $auth                  = undef,
-  $closeMethod           = undef,
+  $close_method           = undef,
   $description           = undef,
   $scope                 = undef,
   $singleton             = undef,
@@ -63,10 +63,10 @@ define tomcat::config::context::resource (
       $_auth = undef
     }
     
-    if $closeMethod {
-      $_closeMethod = "set ${base_path}/#attribute/closeMethod ${closeMethod}"
+    if $close_method {
+      $_close_method = "set ${base_path}/#attribute/closeMethod ${close_method}"
     } else {
-      $_closeMethod = undef
+      $_close_method = undef
     }
     
     if $description {
@@ -107,7 +107,7 @@ define tomcat::config::context::resource (
     }
 
                                     
-    $changes = delete_undef_values(flatten([$_resource, $_auth, $_closeMethod,
+    $changes = delete_undef_values(flatten([$_resource, $_auth, $_close_method,
                                             $_description, $_scope, $_singleton,
                                             $_type, $_additional_attributes,
                                             $_attributes_to_remove]))

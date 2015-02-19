@@ -18,7 +18,7 @@ describe 'tomcat::config::context::resource', :type => :define do
       {
         :catalina_base         => '/opt/apache-tomcat/test',
         :auth                  => 'Container',
-        :closeMethod           => 'closeMethod',
+        :close_method           => 'closeMethod',
         :description           => 'description',
         :scope                 => 'Shareable',
         :singleton             => 'true',

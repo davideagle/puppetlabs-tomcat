@@ -582,7 +582,7 @@ is the name of the Resource to be created, relative to the java:comp/env context
 
 authentication type for the Resource.
 
-#####`$closeMethod`
+#####`$close_method`
 
 Name of the zero-argument method to call on a singleton resource when it is no longer required.
 
