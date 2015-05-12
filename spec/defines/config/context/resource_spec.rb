@@ -47,6 +47,44 @@ describe 'tomcat::config::context::resource', :type => :define do
       )
     }
   end
+  context 'Add resource in server.xml' do
+    let :params do
+      {
+        :catalina_base         => '/opt/apache-tomcat/test',
+        :server_config         => true,
+        :parent_service        => 'Catalina',
+        :parent_engine         => 'Catalina',
+        :parent_host           => 'localhost',
+        :doc_base              => 'myapp.war',
+        :auth                  => 'Container',
+        :close_method          => 'closeMethod',
+        :description           => 'description',
+        :scope                 => 'Shareable',
+        :singleton             => 'true',
+        :type                  => 'net.sourceforge.jtds.jdbcx.JtdsDataSource',
+        :additional_attributes => {'validationQuery' => 'getdate()'},
+        :attributes_to_remove  => [
+          'foobar',
+        ],
+      }
+    end
+    it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test-resource-jdbc').with(
+      'lens' => 'Xml.lns',
+      'incl' => '/opt/apache-tomcat/test/conf/server.xml',
+      'changes' => [
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/name jdbc',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/auth Container',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/closeMethod closeMethod',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/description description',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/scope Shareable',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/singleton true',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/type net.sourceforge.jtds.jdbcx.JtdsDataSource',
+        'set Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/validationQuery \'getdate()\'',
+        'rm Server/Service[#attribute/name=\'Catalina\']/Engine[#attribute/name=\'Catalina\']/Host[#attribute/name=\'localhost\']/Context[#attribute/docBase=\'myapp.war\']/Resource[#attribute/name=\'jdbc\']/#attribute/foobar',
+        ]
+      )
+    }
+  end
   context 'Remove Resource' do
     let :params do
       {

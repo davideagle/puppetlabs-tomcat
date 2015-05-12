@@ -26,12 +26,17 @@
 # - An optional array of $attributes_to_remove from the Connector.
 define tomcat::config::context::resource (
   $resource_name         = undef,
+  $server_config         = false,
   $auth                  = undef,
   $close_method          = undef,
   $description           = undef,
   $scope                 = undef,
   $singleton             = undef,
   $type                  = undef,
+  $doc_base              = undef,
+  $parent_service        = undef,
+  $parent_host           = undef,
+  $parent_engine         = undef,
   $catalina_base         = $::tomcat::catalina_home,
   $ensure                = 'present',
   $additional_attributes = {},
@@ -49,13 +54,55 @@ define tomcat::config::context::resource (
     $_resource_name = $name
   }
 
-  $base_path = "Context/Resource[#attribute/name='${_resource_name}']"
+  #$base_path = "Context/Resource[#attribute/name='${_resource_name}']"
+  
+  if $server_config {
+    
+    $_file = 'server.xml'
+    
+    if $doc_base {
+      $_doc_base = $doc_base
+    } else {
+      $_doc_base = $name
+    }
+  
+    if $parent_service {
+      $_parent_service = $parent_service
+    } else {
+      $_parent_service = 'Catalina'
+    }
+  
+    if $parent_engine and ! $parent_host {
+      warning('context elements cannot be nested directly under engine elements, ignoring $parent_engine')
+    }
+  
+    if $parent_engine and $parent_host {
+      $_parent_engine = $parent_engine
+    } else {
+      $_parent_engine = undef
+    }
+    
+    if $parent_host and ! $_parent_engine {
+      $base_path = "Server/Service[#attribute/name='${_parent_service}']/Engine/Host[#attribute/name='${parent_host}']/Context[#attribute/docBase='${_doc_base}']/Resource[#attribute/name='${_resource_name}']"
+    } elsif $parent_host and $_parent_engine {
+      $base_path = "Server/Service[#attribute/name='${_parent_service}']/Engine[#attribute/name='${_parent_engine}']/Host[#attribute/name='${parent_host}']/Context[#attribute/docBase='${_doc_base}']/Resource[#attribute/name='${_resource_name}']"
+    } else {
+      $base_path = "Server/Service[#attribute/name='${_parent_service}']/Engine/Host/Context[#attribute/docBase='${_doc_base}']/Resource[#attribute/name='${_resource_name}']"
+    }
+    
+  } else {
+    $_file = 'context.xml'
+    $base_path = "Context/Resource[#attribute/name='${_resource_name}']"
+  }
+  
 
   if $ensure =~ /^(absent|false)$/ {
     $changes = "rm ${base_path}"
   } else {
     
+    
     $_resource   = "set ${base_path}/#attribute/name ${_resource_name}"
+    
     
     if $auth {
       $_auth = "set ${base_path}/#attribute/auth ${auth}"
@@ -115,7 +162,7 @@ define tomcat::config::context::resource (
 
   augeas { "context-${catalina_base}-resource-${name}":
     lens    => 'Xml.lns',
-    incl    => "${catalina_base}/conf/context.xml",
+    incl    => "${catalina_base}/conf/${_file}",
     changes => $changes,
   }
 }
