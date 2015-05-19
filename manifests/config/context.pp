@@ -97,7 +97,9 @@ define tomcat::config::context (
   
     $changes = delete_undef_values(flatten([$context, $_additional_attributes, $__watched_resource, $_attributes_to_remove]))
   }
-    
+  
+  notify{"context changes ${changes}":}
+  
   if ! empty($changes) {
     augeas { "${catalina_base}-${_parent_service}-${_parent_engine}-${parent_host}-context-${name}":
       lens    => 'Xml.lns',

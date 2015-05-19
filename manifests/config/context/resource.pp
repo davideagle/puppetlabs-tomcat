@@ -4,6 +4,9 @@
 #
 # Parameters:
 # - $catalina_base is the base directory for the Tomcat installation.
+# - $server_config whether to use server.xml or context.xml to store
+#   config for resources. Defaults to false (use context.xml). valid
+#   values true, false
 # - $ensure specifies whether you are trying to add or remove the
 #   Resource element. Valid values are 'true', 'false', 'present', and
 #   'absent'. Defaults to 'present'.
@@ -24,6 +27,15 @@
 # - An optional hash of $additional_attributes to add to the Resource. Should
 #   be of the format 'attribute' => 'value'.
 # - An optional array of $attributes_to_remove from the Connector.
+# - $doc_base [only aplicable if $server_config = true] The Document Base 
+#   (also known as the Context Root) directory for this web application, or 
+#   the pathname to the web application archive file
+# - $parent_service [only aplicable if $server_config = true] parent service in
+#   server.xml
+# - $parent_host [only aplicable if $server_config = true] parent host in 
+#   server.xml
+# - $parent_engine [only aplicable if $server_config = true] parent engine in
+#   server.xml
 define tomcat::config::context::resource (
   $resource_name         = undef,
   $server_config         = false,
@@ -53,8 +65,6 @@ define tomcat::config::context::resource (
   } else {
     $_resource_name = $name
   }
-
-  #$base_path = "Context/Resource[#attribute/name='${_resource_name}']"
   
   if $server_config {
     
