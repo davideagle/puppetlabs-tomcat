@@ -101,7 +101,8 @@ define tomcat::config::context (
   notify{"context changes ${changes}":}
   
   if ! empty($changes) {
-    augeas { "${catalina_base}-${_parent_service}-${_parent_engine}-${parent_host}-context-${name}":
+    #augeas { "${catalina_base}-${_parent_service}-${_parent_engine}-${parent_host}-context-${name}":
+    augeas { "context-${catalina_base}":
       lens    => 'Xml.lns',
       incl    => "${catalina_base}/conf/${_file}",
       changes => $changes
