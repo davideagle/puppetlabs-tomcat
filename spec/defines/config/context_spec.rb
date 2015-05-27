@@ -25,7 +25,7 @@ describe 'tomcat::config::context', :type => :define do
         ],
       }
     end
-    it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test').with(
+    it { is_expected.to contain_augeas('/opt/apache-tomcat/test-context-Context').with(
       'lens' => 'Xml.lns',
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
@@ -45,7 +45,7 @@ describe 'tomcat::config::context', :type => :define do
         :watched_resource => 'res.xml',
       }
     end
-    it { is_expected.to contain_augeas('context-/opt/apache-tomcat/test').with(
+    it { is_expected.to contain_augeas('/opt/apache-tomcat/test-context-Context').with(
       'lens' => 'Xml.lns',
       'incl' => '/opt/apache-tomcat/test/conf/context.xml',
       'changes' => [
